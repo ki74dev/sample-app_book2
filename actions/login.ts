@@ -1,7 +1,8 @@
 "use server";
 
+import { signIn } from "@/auth";
 import { LoginForm, loginSchema } from "@/types/login-form";
-import { redirect } from "next/navigation";
+import { AuthError } from "next-auth";
 
 const credentialsLogin = async (values: LoginForm) => {
   const safeValues = await loginSchema.safeParseAsync(values);
@@ -10,14 +11,14 @@ const credentialsLogin = async (values: LoginForm) => {
     return { error: "入力エラー" };
   }
 
-  // TODO テスト用
-  await new Promise((resolve) => setTimeout(resolve, 5000));
-
-  if (safeValues.data.password !== "password") {
-    return { error: "ユーザー名またはパスワードが間違っています。" };
+  try {
+    await signIn("credentials", { ...safeValues.data, redirectTo: "/dashboard" });
+  } catch (err) {
+    if (err instanceof AuthError) {
+      return { error: err.cause?.err?.message };
+    }
+    throw err;
   }
-
-  redirect('/dashboard');
 };
 
 export { credentialsLogin };
