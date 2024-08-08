@@ -22,16 +22,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-const loginSchema = z.object({
-  username: z.string().min(1, "ユーザー名を入力してください"),
-  password: z.string().min(1, "パスワードを入力してください"),
-});
-type LoginForm = z.infer<typeof loginSchema>;
+import { LoginForm, loginSchema } from "@/types/login-form";
+import { credentialsLogin } from "@/actions/login";
+import { FormError } from "@/components/form-error";
+import { useState, useTransition } from "react";
 
 const Page: NextPage = () => {
+  const [error, setError] = useState<string | undefined>("");
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -41,7 +41,11 @@ const Page: NextPage = () => {
   });
 
   function onSubmit(values: LoginForm) {
-    console.log(values);
+    setError("");
+    startTransition(async () => {
+      const result = await credentialsLogin(values);
+      setError(result?.error);
+    });
   }
 
   return (
@@ -63,7 +67,7 @@ const Page: NextPage = () => {
                   <FormItem>
                     <FormLabel>ユーザー名</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input disabled={isPending} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -77,15 +81,18 @@ const Page: NextPage = () => {
                   <FormItem>
                     <FormLabel>パスワード</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <Input disabled={isPending} type="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              <FormError title="ログイン失敗" message={error} />
             </CardContent>
             <CardFooter>
-              <Button className="w-full">ログイン</Button>
+              <Button className="w-full" disabled={isPending}>
+                ログイン
+              </Button>
             </CardFooter>
           </Card>
         </form>
