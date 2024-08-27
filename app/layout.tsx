@@ -3,6 +3,7 @@ import { Noto_Sans_JP as FontSans } from "next/font/google";
 import "./globals.css";
 
 import { cn } from "@/lib/utils";
+import { NavHeader } from "@/components/nav-header";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -34,7 +35,7 @@ export default function RootLayout({
           )}
         >
           <header className="sticky top-0 z-50 w-full backdrop-blur">
-            ヘッダ
+            <NavHeader />
           </header>
           {children}
         </div>
