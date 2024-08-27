@@ -25,11 +25,19 @@ export default function RootLayout({
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
           fontSans.variable,
-          "flex min-h-screen flex-col items-center justify-center",
-          "bg-gradient-to-t from-neutral-300 via-neutral-200 to-neutral-100",
         )}
       >
-        {children}
+        <div
+          className={cn(
+            "relative flex min-h-screen flex-col bg-background",
+            "bg-gradient-to-t from-neutral-300 via-neutral-200 to-neutral-100",
+          )}
+        >
+          <header className="sticky top-0 z-50 w-full backdrop-blur">
+            ヘッダ
+          </header>
+          {children}
+        </div>
       </body>
     </html>
   );

@@ -2,12 +2,13 @@
 
 import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
+import { PageRoute } from "@/routes";
 
 export const { auth } = NextAuth(authConfig);
 
 export default auth(async (req) => {
-  if (!req.auth && req.nextUrl.pathname !== "/auth/login") {
-    const newUrl = new URL("/auth/login", req.nextUrl.origin);
+  if (!req.auth && req.nextUrl.pathname !== PageRoute.LOGIN) {
+    const newUrl = new URL(PageRoute.LOGIN, req.nextUrl.origin);
     return Response.redirect(newUrl);
   }
 });

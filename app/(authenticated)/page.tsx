@@ -1,5 +1,6 @@
 import { auth, signOut } from "@/auth";
 import { Button } from "@/components/ui/button";
+import { PageRoute } from "@/routes";
 import { UserRole } from "@prisma/client";
 import type { NextPage } from "next";
 
@@ -21,7 +22,7 @@ const Page: NextPage = async () => {
       <form
         action={async () => {
           "use server";
-          await signOut({ redirectTo: "/auth/login" });
+          await signOut({ redirectTo: PageRoute.LOGIN });
         }}
       >
         <Button type="submit">ログアウト</Button>

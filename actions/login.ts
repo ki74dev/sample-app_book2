@@ -1,6 +1,7 @@
 "use server";
 
 import { signIn } from "@/auth";
+import { PageRoute } from "@/routes";
 import { LoginForm, loginSchema } from "@/types/login-form";
 import { AuthError } from "next-auth";
 
@@ -12,7 +13,10 @@ const credentialsLogin = async (values: LoginForm) => {
   }
 
   try {
-    await signIn("credentials", { ...safeValues.data, redirectTo: "/dashboard" });
+    await signIn("credentials", {
+      ...safeValues.data,
+      redirectTo: PageRoute.HOME,
+    });
   } catch (err) {
     if (err instanceof AuthError) {
       return { error: err.cause?.err?.message };
