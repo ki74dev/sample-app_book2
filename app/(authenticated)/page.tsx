@@ -1,7 +1,5 @@
-import { auth, signOut } from "@/auth";
-import { Button } from "@/components/ui/button";
-import { PageRoute } from "@/routes";
-import { UserRole } from "@prisma/client";
+import { auth } from "@/auth";
+import { UserManagementCard } from "@/components/cards/user-management-card";
 import type { NextPage } from "next";
 
 const Page: NextPage = async () => {
@@ -13,20 +11,9 @@ const Page: NextPage = async () => {
 
   return (
     <div>
-      {session.user.role === UserRole.ADMIN && (
-        <p className="bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-xl font-bold tracking-widest text-transparent">
-          You are an admin, welcome!
-        </p>
-      )}
-      <pre>{JSON.stringify(session, null, 2)}</pre>
-      <form
-        action={async () => {
-          "use server";
-          await signOut({ redirectTo: PageRoute.LOGIN });
-        }}
-      >
-        <Button type="submit">ログアウト</Button>
-      </form>
+      <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+        <UserManagementCard />
+      </div>
     </div>
   );
 };
