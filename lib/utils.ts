@@ -1,3 +1,4 @@
+import { AppName } from "@/constants/env-constants";
 import { pageNameMap, PageRoute } from "@/routes";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -34,4 +35,23 @@ export function generateBreadcrumbs(pathName: string) {
       label: pageNameMap[key] || path,
     };
   });
+}
+
+/**
+ * パス名を生成
+ * @param pathName
+ */
+export function generatePathName(pathName: string | null) {
+  if (!pathName) {
+    return AppName;
+  } else if (pathName === PageRoute.LOGIN) {
+    return `${pageNameMap[pathName]} | ${AppName}`;
+  }
+  const breadcrumbs = generateBreadcrumbs(pathName);
+  return (
+    breadcrumbs
+      .map((bread) => bread.label)
+      .reverse()
+      .join(" | ") + ` | ${AppName}`
+  );
 }
