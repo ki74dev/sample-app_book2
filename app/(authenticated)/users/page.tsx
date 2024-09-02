@@ -1,3 +1,4 @@
+import { UserList } from "@/components/users/user-list";
 import { PageRoute } from "@/routes";
 import type { NextPage } from "next";
 import Link from "next/link";
@@ -18,6 +19,7 @@ const Page: NextPage = () => {
       >
         詳細/更新
       </Link>
+      <UserList />
     </div>
   );
 };
