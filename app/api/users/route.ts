@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 /**
@@ -10,6 +11,7 @@ export const GET = async () => {
   try {
     const users = await db.user.findMany({
       omit: { password: true },
+      orderBy: { name: Prisma.SortOrder.asc },
     });
 
     return NextResponse.json(users, { status: 200 });

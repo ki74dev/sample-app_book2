@@ -21,7 +21,9 @@ export const UserList = () => {
     data: users,
     error,
     isLoading,
-  } = useSWR<(typeof db.user.fields)[], FetchError>(ApiRoute.USERS, fetcher);
+  } = useSWR<(typeof db.user.fields)[], FetchError>(ApiRoute.USERS, fetcher, {
+    revalidateOnFocus: false,
+  });
 
   const handleRowSelectionChange = (
     selectedData: (typeof db.user.fields)[],
@@ -45,26 +47,26 @@ export const UserList = () => {
   // データをレンダリングする
   return (
     <div className="container mx-auto">
-       <div className="grid gap-4 py-2 md:grid-cols-4 lg:grid-cols-6">
-         <Button
-           type="button"
-           size="sm"
-           className="w-full"
-           onClick={() => router.push(PageRoute.USERS_CREATE)}
-         >
-           新規登録
-         </Button>
-         <Button
-           variant="destructive"
-           type="button"
-           size="sm"
-           className="w-full md:col-start-4 lg:col-start-6"
+      <div className="grid gap-4 py-2 md:grid-cols-4 lg:grid-cols-6">
+        <Button
+          type="button"
+          size="sm"
+          className="w-full"
+          onClick={() => router.push(PageRoute.USERS_CREATE)}
+        >
+          新規登録
+        </Button>
+        <Button
+          variant="destructive"
+          type="button"
+          size="sm"
+          className="w-full md:col-start-4 lg:col-start-6"
           disabled={selectedRows.length === 0}
-           onClick={() => console.log(selectedRows)}
-                    >
-           選択したものを一括削除
-         </Button>
-       </div>
+          onClick={() => console.log(selectedRows)}
+        >
+          選択したものを一括削除
+        </Button>
+      </div>
       <DataTable
         columns={userColumns}
         data={users}
