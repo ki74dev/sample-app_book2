@@ -36,12 +36,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   filter?: DataTableFilterProps<TData>;
+  onRowSelectionChange?: (selectedData: TData[]) => void
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   filter,
+  onRowSelectionChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -58,7 +60,21 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: (newRowSelection) => {
+      const updatedSelection =
+        typeof newRowSelection === "function"
+          ? newRowSelection(rowSelection)
+          : newRowSelection;
+
+      setRowSelection(updatedSelection);
+
+      // 選択されたデータを取得
+      const selectedData = Object.keys(updatedSelection)
+        .filter((key) => updatedSelection[key])
+        .map((key) => data[Number(key)]);
+
+      onRowSelectionChange?.(selectedData);
+    },
     globalFilterFn: filter?.globalFilterFunction,
     onGlobalFilterChange: filter ? setGlobalFilter : undefined,
     state: {
