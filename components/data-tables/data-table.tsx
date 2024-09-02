@@ -3,6 +3,7 @@
 import {
   ColumnDef,
   ColumnFiltersState,
+  FilterFnOption,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -26,19 +27,27 @@ import { Input } from "@/components/ui/input";
 import { DataTablePagination } from "@/components/data-tables/ui/data-table-pagination";
 import { DataTableViewOptions } from "@/components/data-tables/ui/data-table-view-options";
 
+type DataTableFilterProps<TData> = {
+  filterPlaceholder: string | undefined;
+  globalFilterFunction: FilterFnOption<TData> | undefined;
+};
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  filter?: DataTableFilterProps<TData>;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  filter,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [globalFilter, setGlobalFilter] = useState("");
   const table = useReactTable({
     data,
     columns,
@@ -50,11 +59,14 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    globalFilterFn: filter?.globalFilterFunction,
+    onGlobalFilterChange: filter ? setGlobalFilter : undefined,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
+      globalFilter,
     },
   });
 
@@ -62,14 +74,16 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="rounded-md border bg-white p-2">
         <div className="flex items-center py-4">
-          <Input
-            placeholder="メールアドレスをフィルタリング"
-            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("email")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
+          {filter && (
+            <Input
+              placeholder={filter?.filterPlaceholder}
+              value={(table.getState().globalFilter as string) ?? ""}
+              onChange={(event) =>
+                table.setGlobalFilter(event.target.value || undefined)
+              }
+              className="max-w-sm"
+            />
+          )}
           <DataTableViewOptions table={table} />
         </div>
         <Table>

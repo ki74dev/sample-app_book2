@@ -7,6 +7,7 @@ import { FetchError } from "@/types/error";
 import useSWR from "swr";
 import { DataTable } from "@/components/data-tables/data-table";
 import { userColumns } from "@/components/users/user-column";
+import { userListFilterFn } from "@/components/users/user-list-filter";
 
 export const UserList = () => {
   const {
@@ -31,7 +32,14 @@ export const UserList = () => {
   // データをレンダリングする
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={userColumns} data={users} />
+      <DataTable
+        columns={userColumns}
+        data={users}
+        filter={{
+          filterPlaceholder: "名前またはメールアドレスをフィルタリング",
+          globalFilterFunction: userListFilterFn,
+        }}
+      />
     </div>
   );
 };
