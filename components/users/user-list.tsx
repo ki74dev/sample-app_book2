@@ -5,6 +5,8 @@ import { db } from "@/lib/db";
 import { ApiRoute } from "@/routes";
 import { FetchError } from "@/types/error";
 import useSWR from "swr";
+import { DataTable } from "@/components/data-tables/data-table";
+import { userColumns } from "@/components/users/user-column";
 
 export const UserList = () => {
   const {
@@ -28,8 +30,8 @@ export const UserList = () => {
 
   // データをレンダリングする
   return (
-    <pre className="rounded-md bg-gray-100 p-4 text-sm">
-      {JSON.stringify(users, null, 2)}
-    </pre>
+    <div className="container mx-auto py-10">
+      <DataTable columns={userColumns} data={users} />
+    </div>
   );
 };

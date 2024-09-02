@@ -13,12 +13,6 @@ const Page: NextPage = () => {
       >
         新規登録
       </Link>
-      <Link
-        className="text-blue-600 underline visited:text-purple-600 hover:text-blue-800"
-        href={PageRoute.USERS_DETAIL.replace("[id]", "test")}
-      >
-        詳細/更新
-      </Link>
       <UserList />
     </div>
   );

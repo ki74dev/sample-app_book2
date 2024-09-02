@@ -1,26 +1,35 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
+
 async function main() {
-  const alice = await prisma.user.upsert({
-    where: { name: "Alice" },
-    update: {},
-    create: {
-      name: "Alice",
-      email: "alice@prisma.io",
-      password: "password",
-    },
-  });
-  const bob = await prisma.user.upsert({
-    where: { name: "Bob" },
-    update: {},
-    create: {
-      name: "Bob",
-      email: "bob@prisma.io",
-      password: "password",
-    },
-  });
-  console.log({ alice, bob });
+  const names = [
+    "Alice", "Bob", "Charlie", "Dave", "Eve", "Frank", "Grace", "Heidi", "Ivan", "Judy",
+    "Karen", "Leo", "Mallory", "Nina", "Oscar", "Peggy", "Quincy", "Rita", "Steve", "Trent",
+    "Uma", "Victor", "Walter", "Xena", "Yvonne", "Zack"
+  ];
+  const domains = ["example.com", "prisma.io", "test.com", "mail.com"];
+
+  const users = await Promise.all(
+    names.map((name) => {
+      const emailDomain = domains[Math.floor(Math.random() * domains.length)];
+      const email = `${name.toLowerCase()}@${emailDomain}`;
+      const password = "password";
+
+      return prisma.user.upsert({
+        where: { name },
+        update: {},
+        create: {
+          name,
+          email,
+          password,
+        },
+      });
+    }),
+  );
+
+  console.log(users);
 }
+
 main()
   .then(async () => {
     await prisma.$disconnect();
