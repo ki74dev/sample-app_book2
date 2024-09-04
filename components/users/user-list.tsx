@@ -11,6 +11,7 @@ import { userListFilterFn } from "@/components/users/user-list-filter";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const UserList = () => {
   const router = useRouter();
@@ -41,7 +42,17 @@ export const UserList = () => {
         </pre>
       </div>
     );
-  if (isLoading) return <div>loading...</div>;
+  if (isLoading)
+    return (
+      <div className="container mx-auto">
+        <div className="rounded-md p-2">
+          <div className="flex items-center py-4">
+            <Skeleton className="h-4 w-[250px]" />
+          </div>
+          <Skeleton className="h-[500px] w-full" />
+        </div>
+      </div>
+    );
   if (!users) return <div>no data.</div>;
 
   // データをレンダリングする
