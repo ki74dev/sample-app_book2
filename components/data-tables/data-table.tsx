@@ -92,6 +92,7 @@ export function DataTable<TData, TValue>({
         <div className="flex items-center py-4">
           {filter && (
             <Input
+              name="data-table-filter"
               placeholder={filter?.filterPlaceholder}
               value={(table.getState().globalFilter as string) ?? ""}
               onChange={(event) =>

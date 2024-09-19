@@ -16,7 +16,9 @@ export default auth(async (req) => {
     return NextResponse.redirect(newUrl, { headers: req.headers });
   }
 
-  return NextResponse.rewrite(req.nextUrl, { headers: req.headers });
+  if (req.nextUrl.pathname !== PageRoute.LOGIN) {
+    return NextResponse.rewrite(req.nextUrl, { headers: req.headers });
+  }
 });
 
 export const config = {
